@@ -1,6 +1,7 @@
 name: Application Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches: "main" 
   pull_request:
@@ -8,7 +9,7 @@ on:
 
 jobs:
   backend:
-    name: "Backend Pipeline"
+    name: "Backend Pipeline (Fake)"
     defaults:
       run:
         working-directory: ./src/backend/
@@ -18,85 +19,54 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Setup Node.js"
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
+        run: echo "Simulating Node.js setup with version 18.x"
 
-      - name: Install Dependencies
-        working-directory: ./backend
-        run: npm install
+      - name: "Install Dependencies"
+        run: echo "Simulating npm install for backend"
 
-      - name: Lint Code
-        working-directory: ./backend
-        run: npm run lint
+      - name: "Lint Code"
+        run: echo "Simulating npm run lint for backend"
 
-      - name: Build Project
-        working-directory: ./backend
-        run: npm run build
+      - name: "Build Project"
+        run: echo "Simulating npm run build for backend"
 
-      - name: Scan Code with Snyk
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Install Snyk CLI
-        uses: snyk/actions/setup@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Snyk Authenticate
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      - name: Snyk Code Test
-        run: snyk code test --all-projects
+      - name: "Scan Code with Snyk"
+        run: echo "Simulating Snyk scan for backend"
         continue-on-error: true
 
-      - name: Setup SonarQube
-        uses: warchant/setup-sonar-scanner@v8
+      - name: "Install Snyk CLI"
+        run: echo "Simulating Snyk CLI installation for backend"
 
-      - name: Analyze with SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: backend
-          args: >
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.host.url=${{ secrets.SONAR_URL }}
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-            -Dsonar.sources=.
-            -Dsonar.verbose=true
+      - name: "Snyk Authenticate"
+        run: echo "Simulating Snyk authentication"
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: "Snyk Code Test"
+        run: echo "Simulating Snyk code test for backend"
+        continue-on-error: true
 
-      - name: Build Docker Image
-        run: |
-          docker buildx build --tag your-dockerhub-username/backend:latest .
+      - name: "Setup SonarQube"
+        run: echo "Simulating SonarQube setup for backend"
 
-      - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: your-dockerhub-username/backend:latest
-          format: "sarif"
-          output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH"
+      - name: "Analyze with SonarCloud"
+        run: echo "Simulating SonarCloud analysis for backend"
 
-      - name: Push Docker Image to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: "Set up Docker Buildx"
+        run: echo "Simulating Docker Buildx setup for backend"
 
-      - name: Push Docker Image
-        run: |
-          docker push your-dockerhub-username/backend:latest
+      - name: "Build Docker Image"
+        run: echo "Simulating Docker image build for backend"
+
+      - name: "Scan Docker Image with Trivy"
+        run: echo "Simulating Trivy scan for backend Docker image"
+
+      - name: "Push Docker Image to Docker Hub"
+        run: echo "Simulating Docker image push to Docker Hub for backend"
+
+      - name: "Add a delay"
+        run: echo "Simulating delay..." && sleep 10  # Add a 10-second delay
 
   frontend:
-    name: "frontend Pipeline"
+    name: "Frontend Pipeline (Fake)"
     defaults:
       run:
         working-directory: ./src/frontend/
@@ -106,79 +76,49 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Setup Node.js"
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
+        run: echo "Simulating Node.js setup with version 18.x"
 
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: npm install
+      - name: "Install Dependencies"
+        run: echo "Simulating npm install for frontend"
 
-      - name: Lint Code
-        working-directory: ./frontend
-        run: npm run lint
+      - name: "Lint Code"
+        run: echo "Simulating npm run lint for frontend"
 
-      - name: Build Project
-        working-directory: ./frontend
-        run: npm run build
+      - name: "Build Project"
+        run: echo "Simulating npm run build for frontend"
 
-      - name: Scan Code with Snyk
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Install Snyk CLI
-        uses: snyk/actions/setup@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Snyk Authenticate
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-
-      - name: Snyk Code Test
-        run: snyk code test --all-projects
+      - name: "Scan Code with Snyk"
+        run: echo "Simulating Snyk scan for frontend" && sleep 10
         continue-on-error: true
 
-      - name: Setup SonarQube
-        uses: warchant/setup-sonar-scanner@v8
+      - name: "Install Snyk CLI"
+        run: echo "Simulating Snyk CLI installation for frontend"
 
-      - name: Analyze with SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: frontend
-          args: >
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.host.url=${{ secrets.SONAR_URL }}
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-            -Dsonar.sources=.
-            -Dsonar.verbose=true
+      - name: "Snyk Authenticate"
+        run: echo "Simulating Snyk authentication"
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: "Snyk Code Test"
+        run: echo "Simulating Snyk code test for frontend" && sleep 10
+        continue-on-error: true
 
-      - name: Build Docker Image
-        run: |
-          docker buildx build --tag your-dockerhub-username/frontend:latest .
+      - name: "Setup SonarQube"
+        run: echo "Simulating SonarQube setup for frontend"
 
-      - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: your-dockerhub-username/frontend:latest
-          format: "sarif"
-          output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH"
+      - name: "Analyze with SonarCloud"
+        run: echo "Simulating SonarCloud analysis for frontend"
 
-      - name: Push Docker Image to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: "Set up Docker Buildx"
+        run: echo "Simulating Docker Buildx setup for frontend"
 
-      - name: Push Docker Image
-        run: |
-          docker push your-dockerhub-username/frontend:latest
+      - name: "Build Docker Image"
+        run: echo "Simulating Docker image build for frontend" && sleep 10
+
+      - name: "Scan Docker Image with Trivy"
+        run: echo "Simulating Trivy scan for frontend Docker image" && sleep 10
+
+      - name: "Push Docker Image to Docker Hub"
+        run: echo "Simulating Docker image push to Docker Hub for frontend"
+
+      - name: "Add a delay"
+        run: echo "Simulating delay..." && sleep 10  # Add a 10-second delay
+
