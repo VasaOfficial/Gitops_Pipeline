@@ -1,4 +1,4 @@
-name: Cloudcore IAC
+name: Terraform Infrastructure
 
 on:
   push:
