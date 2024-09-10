@@ -22,7 +22,7 @@ env:
 
 jobs:
   terraform:
-    name: "Apply terraform code changes"
+    name: "Apply terraform code changes (Fake)"
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,32 +32,32 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform with specified version on the runner
-        uses: hashicorp/setup-terraform@v3
+      - name: Fake Setup Terraform
+        run: echo "Simulating Terraform setup..."
 
-      - name: Terraform Init
+      - name: Fake Terraform Init
         id: init
-        run: terraform init -backend-config "bucket=$BUCKET_TF_STATE"
+        run: echo "Simulating terraform init -backend-config 'bucket=$BUCKET_TF_STATE'"
 
-      - name: Terraform Format
+      - name: Fake Terraform Format
         id: fmt
-        run: terraform fmt -check
+        run: echo "Simulating terraform fmt -check"
         continue-on-error: true
 
-      - name: Terraform Validate
+      - name: Fake Terraform Validate
         id: validate
-        run: terraform validate
+        run: echo "Simulating terraform validate"
 
-      - name: Terraform Plan
+      - name: Fake Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out planfile
+        run: echo "Simulating terraform plan -no-color -input=false -out planfile"
         continue-on-error: true
 
-      - name: Terraform Plan Status
+      - name: Fake Terraform Plan Status
         if: steps.plan.outcome == 'failure'
-        run: exit 1
+        run: echo "Simulating failure handling" && exit 1
 
-      - name: Terraform Apply
+      - name: Fake Terraform Apply
         id: apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false -parallelism=1 planfile
+        run: echo "Simulating terraform apply -auto-approve -input=false -parallelism=1 planfile" && sleep 30
